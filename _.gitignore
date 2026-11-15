@@ -1,0 +1,7 @@
+data/raw/
+*.zip
+data/processed/eye_dataset_64.npz
+models/*.keras
+.ipynb_checkpoints/
+__pycache__/
+.DS_Store

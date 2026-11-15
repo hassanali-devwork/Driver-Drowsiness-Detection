@@ -1,0 +1,19 @@
+# Core (notebooks 00-03)
+numpy>=1.24
+pandas>=2.0
+matplotlib>=3.7
+seaborn>=0.12
+pillow>=10.0
+scipy>=1.10
+scikit-learn>=1.3
+tqdm>=4.65
+requests>=2.31
+# Notebook 04 (training)
+tensorflow>=2.15
+# Running notebooks
+jupyter
+ipykernel
+# Optional: Kaggle download (SOURCE='kaggle') and the live-camera demo notebook
+# kaggle
+# opencv-python-headless
+# mediapipe==0.10.14
