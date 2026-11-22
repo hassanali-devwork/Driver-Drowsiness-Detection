@@ -1,0 +1,11 @@
+condition,group,n,accuracy,recall_closed,specificity_open
+lighting,bad light,3595,0.972,0.959,0.988
+lighting,good light,2471,0.975,0.965,0.986
+glasses,no glasses,5737,0.976,0.967,0.988
+glasses,glasses,329,0.918,0.657,0.985
+reflections,no reflection,5791,0.976,0.966,0.988
+reflections,small,66,0.97,0.667,1.0
+reflections,big,209,0.9,0.575,0.976
+sensor,sensor 1,6066,0.973,0.961,0.987
+gender,male,4418,0.964,0.935,0.986
+gender,female,1648,0.999,0.998,1.0

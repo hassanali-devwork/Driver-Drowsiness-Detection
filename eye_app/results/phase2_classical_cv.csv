@@ -1,0 +1,10 @@
+model,params,mean_test_score,std_test_score,rank_test_score
+LogReg (HOG),{'clf__C': 0.01},0.9298925863367217,0.006786975515795588,1
+LogReg (HOG),{'clf__C': 0.1},0.922735787434635,0.004493827954671414,2
+LogReg (HOG),{'clf__C': 1},0.917865830662782,0.004798551423243605,3
+RandomForest (HOG),"{'max_depth': 25, 'max_features': 'sqrt', 'n_estimators': 200}",0.9408458582583528,0.008694838273907466,1
+RandomForest (HOG),"{'max_depth': None, 'max_features': 'sqrt', 'n_estimators': 200}",0.9402882568247825,0.009544582208455735,2
+SVM-RBF (HOG),"{'clf__C': 10, 'clf__gamma': 'scale'}",0.9571166099231677,0.005330566855118303,1
+SVM-RBF (HOG),"{'clf__C': 1, 'clf__gamma': 'scale'}",0.9538490597105221,0.001917432345733416,2
+SVM-RBF (HOG),"{'clf__C': 10, 'clf__gamma': 0.003}",0.9496437366268272,0.01398714093924571,3
+SVM-RBF (HOG),"{'clf__C': 1, 'clf__gamma': 0.003}",0.9478714198983398,0.014304427871967833,4

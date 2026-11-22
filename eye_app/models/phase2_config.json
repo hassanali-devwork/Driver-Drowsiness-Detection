@@ -1,0 +1,18 @@
+{
+  "model_name": "ResNet-mini",
+  "threshold": 0.7000000000000002,
+  "input_size": [
+    64,
+    64
+  ],
+  "channels": 1,
+  "preprocessing": "grayscale, resize to 64x64, divide by 255",
+  "positive_class": "closed (1)",
+  "test_metrics": {
+    "accuracy": 0.9733,
+    "precision_closed": 0.9885,
+    "recall_closed": 0.9609,
+    "f1_closed": 0.9745,
+    "auc": 0.9966
+  }
+}
