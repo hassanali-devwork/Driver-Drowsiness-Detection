@@ -1,7 +1,7 @@
-streamlit>=1.38
-tensorflow-cpu==2.17.0   # use the SAME version as your Kaggle notebook (print tf.__version__ there)
-opencv-python-headless>=4.9
-numpy>=1.26,<2.0
-pandas>=2.0
-altair>=5.0
-Pillow>=10.0
+streamlit==1.67.0
+tensorflow==2.21.0
+opencv-python-headless==4.10.0.84
+numpy==2.5.2
+pandas==3.0.5
+altair==6.3.0
+Pillow==12.3.0
