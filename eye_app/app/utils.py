@@ -47,6 +47,13 @@ def inject_css():
 
       .alert {border-radius: 14px; padding: 14px 18px; background: #fdecea; border: 2px solid #e74c3c; color: #922b21;
               font-weight: 700; margin-top: 10px;}
+      @media (max-width: 700px) {
+        .block-container {padding: .7rem .75rem 3rem !important;}
+        .hero {padding: 16px 16px; border-radius: 18px; margin-bottom: 12px;}
+        .hero h1 {font-size: 1.5rem;} .hero p {font-size: .88rem;}
+        .chip {font-size: .68rem; padding: 3px 9px;}
+        button[data-baseweb="tab"] {padding-left: 10px; padding-right: 10px; font-size: .9rem;}
+      }
     </style>""", unsafe_allow_html=True)
 
 

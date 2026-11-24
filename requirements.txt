@@ -6,6 +6,3 @@ pandas==3.0.5
 altair==6.3.0
 Pillow==12.3.0
 matplotlib
-streamlit-webrtc==0.79.1
-av==19.0.1
-aiortc==1.16.0

@@ -4,7 +4,7 @@ import time
 import streamlit as st
 from utils import inject_css, best_model, read_image, get_crops, predict, annotate
 
-st.set_page_config(page_title="Eye-State Detector", page_icon="👁️", layout="wide")
+st.set_page_config(page_title="Eye-State Detector", page_icon="👁️", layout="wide", initial_sidebar_state="collapsed")
 inject_css()
 
 # ------------------------------------------------------------------ styling
@@ -61,15 +61,27 @@ st.markdown("""
   .alert {border-radius: 14px; padding: 14px 18px; background: #fdecea; border: 2px solid #e74c3c; color: #922b21;
           font-weight: 700; margin-top: 10px; animation: pulse 1s ease-in-out infinite;}
   @keyframes pulse { 50% { box-shadow: 0 0 0 8px rgba(231,76,60,.18); } }
+  /* ---------- phones / small screens ---------- */
+  @media (max-width: 700px) {
+    .block-container {padding: .7rem .75rem 3rem !important;}
+    .hero {padding: 16px 16px; border-radius: 18px; margin-bottom: 12px;}
+    .hero h1 {font-size: 1.5rem;} .hero p {font-size: .88rem;}
+    .chip {font-size: .68rem; padding: 3px 9px;}
+    .gauge.big {--size: 170px !important; --thick: 14px !important;}
+    .pill {font-size: 1.15rem; padding: 10px 12px;}
+    .eyes {gap: 10px;}
+    .stButton > button, [data-testid="stFileUploader"] button {min-height: 3rem; font-size: 1rem;}
+    button[data-baseweb="tab"] {padding-left: 10px; padding-right: 10px; font-size: .9rem;}
+  }
 </style>
 """, unsafe_allow_html=True)
 
 
-def gauge(p, size=210, thick=16, label="Closed probability", tint=None):
+def gauge(p, size=210, thick=16, label="Closed probability", tint=None, cls=""):
     """Animated circular gauge, counts from 0% up to p."""
     pct = max(0.0, min(100.0, p * 100))
     tint = tint or ("#ef4444" if p >= 0.5 else "#22c55e")
-    return (f'<div class="gauge" style="--size:{size}px;--thick:{thick}px;--tint:{tint};'
+    return (f'<div class="gauge {cls}" style="--size:{size}px;--thick:{thick}px;--tint:{tint};'
             f'--target:{pct:.1f};--target-int:{round(pct)};">'
             f'<div class="ring"></div><div class="gnum"><span class="pct"></span><small>{label}</small></div></div>')
 
@@ -81,18 +93,6 @@ except Exception as e:
     st.error(f"Could not load models/best_model.keras: {e}")
     st.stop()
 
-# ------------------------------------------------------------------ sidebar
-with st.sidebar:
-    st.header("⚙️ Settings")
-    mode_label = st.radio("Input type", ["Face photo (find eyes automatically)", "Eye close-up (use image as is)"],
-                          help="The model was trained on small eye crops. For a normal selfie / webcam photo use the first option.")
-    mode = "auto" if mode_label.startswith("Face") else "crop"
-    thr = st.slider("Closed-eye threshold", 0.05, 0.95, float(default_thr), 0.01,
-                    help="Probability above which an eye is called CLOSED. Lower = more sensitive (fewer missed closed eyes, more false alarms).")
-    alert_n = st.slider("Drowsiness alert after N closed snapshots in a row", 2, 6, 3)
-    st.divider()
-    st.caption(f"🧠 Model: **{cfg.get('model_name')}**  \nTrained threshold: {default_thr:.2f}")
-
 # ------------------------------------------------------------------ hero
 st.markdown(f"""
 <div class="hero">
@@ -101,6 +101,18 @@ st.markdown(f"""
   <div class="chips"><span class="chip">📷 Camera</span><span class="chip">🖼️ Upload</span>
   <span class="chip">🧠 {cfg.get('model_name')}</span><span class="chip">⚡ real-time on CPU</span></div>
 </div>""", unsafe_allow_html=True)
+
+
+# ------------------------------------------------------------------ settings (on the page, so phones can reach them)
+with st.expander("⚙️ Settings", expanded=False):
+    mode_label = st.radio("Input type", ["Face photo (find eyes automatically)", "Eye close-up (use image as is)"],
+                          help="The model was trained on small eye crops. For a normal selfie / webcam photo use the first option.")
+    mode = "auto" if mode_label.startswith("Face") else "crop"
+    sc1, sc2 = st.columns(2)
+    thr = sc1.slider("Closed-eye threshold", 0.05, 0.95, float(default_thr), 0.01,
+                     help="Probability above which an eye is called CLOSED. Lower = more sensitive (fewer missed closed eyes, more false alarms).")
+    alert_n = sc2.slider("Alert after N closed snapshots in a row", 2, 6, 3)
+    st.caption(f"🧠 Model: **{cfg.get('model_name')}** - trained threshold {default_thr:.2f}")
 
 
 def show_result(rgb):
@@ -124,7 +136,7 @@ def show_result(rgb):
         st.image(annotate(rgb, boxes, flags) if mode == "auto" else rgb, width="stretch",
                  caption="Green box = open, red box = closed" if mode == "auto" else None)
     with right, st.container(border=True):
-        st.markdown(gauge(p_mean, 220, 18, "Closed probability", tint), unsafe_allow_html=True)
+        st.markdown(gauge(p_mean, 220, 18, "Closed probability", tint, cls="big"), unsafe_allow_html=True)
         st.markdown(f'<div class="pill {"closed" if closed else "open"}">{"😴 EYES CLOSED" if closed else "👀 EYES OPEN"}</div>'
                     f'<div class="sub">decision threshold {thr:.0%}</div>', unsafe_allow_html=True)
         if len(probs) > 1:
@@ -137,10 +149,11 @@ def show_result(rgb):
 
 
 # ------------------------------------------------------------------ tabs
-tab_cam, tab_up = st.tabs(["📷  Camera", "🖼️  Upload a picture"])
+tab_cam, tab_up = st.tabs(["📷  Selfie camera", "📱  Phone camera / upload"])
 
 with tab_cam:
-    st.write("Take a snapshot with your webcam. Take several in a row to test the **drowsiness alert**.")
+    st.write("Take a snapshot. Take several in a row to test the **drowsiness alert**.")
+    st.caption("📱 On a phone this uses the front camera. To use the **back camera**, open the *Phone camera / upload* tab.")
     if "history" not in st.session_state:
         st.session_state.history, st.session_state.last = [], None
     shot = st.camera_input("Look at the camera", label_visibility="collapsed")
@@ -160,7 +173,9 @@ with tab_cam:
                 st.session_state.history, st.session_state.last = [], None; st.rerun()
 
 with tab_up:
-    up = st.file_uploader("Upload a JPG / PNG", type=["jpg", "jpeg", "png"])
+    st.info("📱 **On a phone:** tap *Browse files* and choose **Take photo** - your phone camera opens, and you can switch between the "
+            "**front and back** camera there. On a computer you can upload any picture.")
+    up = st.file_uploader("Take or upload a photo (JPG / PNG)", type=["jpg", "jpeg", "png"])
     if up is not None:
         show_result(read_image(up))
     else:
